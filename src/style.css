@@ -1,4 +1,4 @@
-:root{--ink:#1B1030;--paper:#FFFDF5;--magenta:#FF2E88;--yellow:#FFD23F;--cyan:#19C3E6;--green:#00B377;--lime:#C6F432;--orange:#FF7A1A;
+:root{--ink:#1B1030;--paper:#FFFDF5;--magenta:#FF2E88;--yellow:#FFD23F;--cyan:#19C3E6;--green:#00B377;--lime:#C6F432;--orange:#FF7A1A;--red:#E8364A;
   --display:Bungee,"Arial Black",Impact,sans-serif}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;position:fixed;inset:0;width:100%;background:#9FE6FF;font-family:'Baloo 2',system-ui,sans-serif;color:var(--ink);
@@ -36,7 +36,7 @@ button{font-family:inherit;color:inherit}
 .job span{display:block;font-size:13px;font-weight:600;opacity:.8}
 .pause{pointer-events:auto;flex:none;width:52px;height:52px;border-radius:50%;background:var(--paper);border:3px solid var(--ink);
   box-shadow:3px 3px 0 var(--magenta);display:grid;place-items:center;cursor:pointer;padding:0;touch-action:manipulation}
-.pause span{display:flex;gap:6px}.pause i{display:block;width:7px;height:20px;background:var(--ink);border-radius:2px}
+.pause .ic{width:30px;height:30px}
 .pause:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--magenta)}
 .pause:focus-visible{outline:4px solid var(--cyan);outline-offset:3px}
 
@@ -66,9 +66,9 @@ button{font-family:inherit;color:inherit}
 .stick{position:absolute;left:calc(env(safe-area-inset-left) + 24px);bottom:calc(env(safe-area-inset-bottom) + 28px);width:140px;height:140px;border-radius:50%;
   background:rgba(255,253,245,.35);border:3px solid rgba(27,16,48,.55);pointer-events:auto;touch-action:none}
 .knob{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:var(--paper);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--magenta)}
-.tbtns{position:absolute;right:calc(env(safe-area-inset-right) + 20px);bottom:calc(env(safe-area-inset-bottom) + 30px);display:flex;flex-direction:column;gap:14px;align-items:flex-end}
-.tbtn{pointer-events:auto;touch-action:none;width:76px;height:76px;border-radius:50%;border:3px solid var(--ink);background:var(--paper);font-family:var(--display);font-size:15px;box-shadow:3px 3px 0 var(--ink)}
-.tbtn.boost{background:var(--magenta);color:var(--paper)}
+.tbtns{position:absolute;right:calc(env(safe-area-inset-right) + 16px);bottom:calc(env(safe-area-inset-bottom) + 26px);display:flex;flex-direction:column;gap:12px;align-items:flex-end}
+.tbtn{pointer-events:auto;touch-action:none;width:76px;height:76px;border-radius:50%;border:3px solid var(--ink);background:var(--paper);font-family:var(--display);font-size:15px;box-shadow:3px 3px 0 var(--ink);padding:0}
+.tbtn.boost{background:var(--magenta)}
 .tbtn.on{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 
 /* cards */
@@ -115,7 +115,7 @@ button{font-family:inherit;color:inherit}
   pointer-events:none;transition:opacity .45s}
 .menu.hidden{opacity:0}
 .menu.hidden .card{transform:translateY(40px)}
-.menu.hidden .card *{pointer-events:none}
+.menu.hidden .card,.menu.hidden .card *{pointer-events:none}
 .menu .card{pointer-events:auto;transition:transform .5s cubic-bezier(.2,1.3,.4,1);max-height:calc(100dvh - 36px);overflow:auto;overscroll-behavior:contain}
 .menu:has(.howing) .title{display:none}
 .menu:has(.howing){justify-content:center}
@@ -135,3 +135,66 @@ button{font-family:inherit;color:inherit}
 .how .tip{margin-top:12px;background:#FFF3C4;border:2px dashed var(--ink);border-radius:12px;padding:8px 10px;font-size:14px}
 @media (max-width:700px){.menu{align-items:center;text-align:center}.title .t1{text-shadow:3px 3px 0 var(--ink),5px 5px 0 var(--yellow)}}
 @media (prefers-reduced-motion:reduce){.cash.bump,.record.on,.toast.show,.float{animation-duration:.01s}.card{transition:none}.vig.nitro{animation:none}}
+
+/* icons */
+.ic{width:22px;height:22px;display:block;flex:none;overflow:visible}
+.ibtn{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:15px;background:var(--paper);border:2.5px solid var(--ink);border-radius:999px;
+  padding:5px 14px 4px 7px;box-shadow:0 3px 0 var(--ink);cursor:pointer;touch-action:manipulation;line-height:1}
+.ibtn .ic{width:24px;height:24px}
+.ibtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.ibtn:focus-visible,.opt:focus-visible,.pbtn:focus-visible{outline:4px solid var(--cyan);outline-offset:3px}
+.ibtn[aria-pressed="false"]{background:#ECE8F2}
+.ibtn[aria-pressed="false"] span{opacity:.6}
+.ibtn.back{margin:16px auto 0;display:flex}
+@media (hover:hover){.ibtn:hover{background:#FFF3C4}}
+.row.icons{gap:10px}
+.btn.withicon{display:inline-flex;align-items:center;gap:10px}
+.btn.withicon .ic{width:32px;height:32px}
+
+/* controls panel */
+.card.wide{width:min(94vw,600px);max-height:calc(100dvh - 40px);overflow:auto;overscroll-behavior:contain}
+.opt-h{font-family:var(--display);font-weight:400;font-size:16px;margin:14px 0 8px;text-align:left}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opts.two{grid-template-columns:repeat(2,1fr)}
+.opt{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  padding:10px 8px 8px;cursor:pointer;box-shadow:0 4px 0 var(--ink);touch-action:manipulation;font:inherit;color:inherit}
+.opt .ic{width:44px;height:44px}
+.opt b{font-size:16px;line-height:1.1}
+.opt span{font-size:13px;font-weight:600;opacity:.75;line-height:1.25}
+.opt[aria-checked="true"]{background:var(--yellow);box-shadow:0 4px 0 var(--ink),0 0 0 3px var(--magenta)}
+.opt:active{transform:translateY(2px);box-shadow:0 2px 0 var(--ink)}
+.keylist{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;text-align:left;margin:0;font-weight:600;font-size:14px;align-items:center}
+.keylist dt{white-space:nowrap}
+.keylist dd{margin:0}
+kbd{display:inline-block;min-width:24px;padding:1px 6px 0;margin:0 2px;border:2px solid var(--ink);border-bottom-width:4px;border-radius:7px;background:var(--paper);font:800 13px 'Baloo 2',sans-serif;text-align:center}
+@media (max-width:560px){
+  .opts,.opts.two{grid-template-columns:1fr}
+  .opt{display:grid;grid-template-columns:44px 1fr;grid-template-rows:auto auto;text-align:left;column-gap:12px;row-gap:0;padding:8px 12px}
+  .opt .ic{grid-row:span 2;align-self:center}
+}
+
+/* touch layouts */
+.tzones{position:fixed;inset:0;z-index:8;display:flex;pointer-events:none}
+.tzone{flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:calc(env(safe-area-inset-bottom) + 34px);transition:background .15s}
+.tzone .ic{width:56px;height:56px;opacity:.55;filter:drop-shadow(2px 2px 0 rgba(27,16,48,.5))}
+.tzone.l{border-right:2px dashed rgba(255,253,245,.35)}
+.tzone.flash{background:rgba(255,253,245,.16)}
+.pad.runpad{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 18px);z-index:11;display:flex;justify-content:space-between;align-items:flex-end;
+  padding:0 calc(env(safe-area-inset-right) + 16px) 0 calc(env(safe-area-inset-left) + 16px);pointer-events:none}
+.pbtn{pointer-events:auto;touch-action:none;width:84px;height:84px;border-radius:24px;border:3px solid var(--ink);background:rgba(255,253,245,.92);
+  box-shadow:0 5px 0 var(--ink);display:grid;place-items:center;padding:0;cursor:pointer;-webkit-user-select:none;user-select:none}
+.pbtn .ic{width:46px;height:46px}
+.pbtn.on{transform:translateY(4px);box-shadow:0 1px 0 var(--ink);background:var(--yellow)}
+.pbtn.hop{width:76px;height:76px;border-radius:50%;margin-bottom:6px;background:rgba(198,244,50,.92)}
+.swipehint{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 40px);transform:translateX(-50%);z-index:11;pointer-events:none;display:flex;align-items:center;gap:10px;
+  background:rgba(255,253,245,.92);border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px 6px 10px;font-weight:800;box-shadow:3px 3px 0 var(--ink);transition:opacity .6s}
+.swipehint .ic{width:34px;height:34px}
+.swipehint.fade{opacity:0}
+.steerpad{position:absolute;left:calc(env(safe-area-inset-left) + 16px);bottom:calc(env(safe-area-inset-bottom) + 26px);display:flex;gap:12px}
+.pedals{display:flex;gap:12px;align-items:flex-end}
+.pedals .gas{height:110px}
+.tbtn{display:grid;place-items:center}
+.tbtn .ic{width:36px;height:36px}
+.tbtn.small{width:64px;height:64px}
+body.pads .chips{bottom:calc(env(safe-area-inset-bottom) + 130px)}
+body.overlay .runpad,body.overlay .tzones,body.overlay .touch,body.overlay .swipehint{visibility:hidden}

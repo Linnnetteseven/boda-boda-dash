@@ -9,7 +9,7 @@ import { runner } from './runner.js'
 import { roam } from './roam.js'
 import { updateFx, clearFx } from './fx3d.js'
 import { AU, audioInit, audioFrame, sfx, setSound, setMusicContext } from './audio.js'
-import { $, setScreen, buildPowerupUI, setupTouch, stick, resizeFx, renderFx, burstConfetti, clearConfetti, toast, updateChips } from './ui.js'
+import { $, setScreen, buildPowerupUI, setupTouch, resizeFx, renderFx, burstConfetti, clearConfetti, toast, controls, showTouchLayout, setTouchActions, flashZone, setupControlsPanel } from './ui.js'
 import { clamp, damp, rnd, isTouch, reduceMotion } from './util.js'
 
 const modes = { runner, roam }
@@ -96,14 +96,14 @@ async function startGame (name) {
   $('lvl').textContent = name === 'runner' ? 'Speed 1' : '3:00'
   $('menuCard').classList.remove('howing')
   setScreen(null)
-  $('touch').hidden = !(isTouch && name === 'roam')
+  showTouchLayout(name, isTouch)
   sfx('start')
-  if (name === 'roam') toast('Free ride', isTouch ? 'Steer with the stick. Find a waving passenger.' : 'W A S D to ride. Find a waving passenger.')
+  if (name === 'roam') toast('Free ride', !isTouch ? 'W A S D to ride. Find a waving passenger.' : controls.roam === 'stick' ? 'Steer with the stick. Find a waving passenger.' : 'Steer with ◀ ▶, ride with ▲. Find a waving passenger.')
 }
 async function toMenu () {
   game.state = 'menu'; game.mode = null
   for (const k in game.pu) game.pu[k] = 0
-  $('touch').hidden = true
+  showTouchLayout(null, isTouch)
   if (current !== runner) await switchMode('runner')
   else runner.restart()
   clearFx()
@@ -116,10 +116,23 @@ function pause () {
   $('pauseText').textContent = game.money ? `Your Ksh ${game.money.toLocaleString('en-KE')} is safe.` : 'Take a breather.'
   setScreen('paused'); setTimeout(() => $('resumeBtn').focus({ preventScroll: true }), 50)
 }
+let ctrlReturn = 'menu'
+function openControls () {
+  ctrlReturn = ['menu', 'paused', 'over'].find(id => !$(id).classList.contains('hidden')) || 'menu'
+  setScreen('controls'); setTimeout(() => $('ctrlBack').focus({ preventScroll: true }), 50)
+}
+function closeControls () { setScreen(ctrlReturn); if (ctrlReturn === 'menu') $('menuBest').textContent = menuBestText() }
+function updateHowTexts () {
+  if (!isTouch) return
+  const r = { swipe: 'Swipe left or right to change lane, swipe up to hop.', tap: 'Tap the left or right side to change lane, swipe up to hop.', buttons: 'Use the ◀ ▶ buttons to change lane and the hop button to jump.' }[controls.runner]
+  $('howRunner').textContent = r + ' Potholes and matatus end your ride. Passengers pay Ksh 50, coins Ksh 10.'
+  const f = controls.roam === 'stick' ? 'Steer and ride with the stick, hold Boost to go faster, tap Hop to jump.' : 'Steer with ◀ ▶, ride with ▲ and brake with ▼. Hold Boost to go faster, tap Hop to jump.'
+  $('howRoam').textContent = f + ' Pick up a waving passenger at a stage, then ride to the green beam to drop them off. Faster drops pay a tip.'
+}
 function resume () { if (game.state !== 'paused') return; game.state = 'play'; setScreen(null) }
 function endRun (title, reason) {
   const record = finishRun(title, reason)
-  setScreen('over'); $('touch').hidden = true
+  setScreen('over'); showTouchLayout(null, isTouch)
   if (record) { burstConfetti(); sfx('record') }
   setTimeout(() => $('againBtn').focus({ preventScroll: true }), 350)
 }
@@ -136,6 +149,7 @@ addEventListener('keydown', e => {
   else if (k === 'Shift') keys.boost = true
   else if (k === ' ') { e.preventDefault(); if (play && !e.repeat) current.hop(); else if (game.state === 'menu') startGame('runner'); else if (game.state === 'over') startGame(game.mode) }
   else if (k === 'Enter') { if (game.state === 'menu') startGame('runner'); else if (game.state === 'over') startGame(game.mode) }
+  else if (k === 'Escape' && !$('controls').classList.contains('hidden')) { e.preventDefault(); closeControls() }
   else if (['p', 'P', 'Escape'].includes(k)) { e.preventDefault(); game.state === 'paused' ? resume() : pause() }
   else if ((k === 'r' || k === 'R') && play && game.mode === 'roam') roam.reset()
 })
@@ -147,15 +161,21 @@ addEventListener('keyup', e => {
   else if (['ArrowDown', 's', 'S'].includes(k)) keys.down = false
   else if (k === 'Shift') keys.boost = false
 })
-// Runner on a phone: tap a side to change lane, swipe up to hop.
+// Runner on a phone. Swipe: left/right changes lane, up hops. Tap sides: tap a half to change lane, swipe up hops.
+// Arrow buttons: handled by the on-screen pad, so the canvas ignores touches.
 const swipe = new Map()
-$('game').addEventListener('pointerdown', e => { if (game.state === 'play' && game.mode === 'runner') { swipe.set(e.pointerId, { x: e.clientX, y: e.clientY, done: false }); e.preventDefault() } })
+const runnerTouch = () => game.state === 'play' && game.mode === 'runner' && controls.runner !== 'buttons'
+$('game').addEventListener('pointerdown', e => { if (runnerTouch()) { swipe.set(e.pointerId, { x: e.clientX, y: e.clientY, done: false }); e.preventDefault() } })
 $('game').addEventListener('pointermove', e => {
   const s = swipe.get(e.pointerId); if (!s || s.done) return
-  if (s.y - e.clientY > 40) { s.done = true; runner.hop() }
-  else if (Math.abs(e.clientX - s.x) > 50) { s.done = true; runner.steer(Math.sign(e.clientX - s.x)) }
+  const dx = e.clientX - s.x, dy = e.clientY - s.y
+  if (-dy > 36 && -dy > Math.abs(dx)) { s.done = true; runner.hop() }
+  else if (controls.runner === 'swipe' && Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) { s.done = true; runner.steer(Math.sign(dx)) }
 })
-$('game').addEventListener('pointerup', e => { const s = swipe.get(e.pointerId); swipe.delete(e.pointerId); if (s && !s.done) runner.steer(e.clientX < innerWidth / 2 ? -1 : 1) })
+$('game').addEventListener('pointerup', e => {
+  const s = swipe.get(e.pointerId); swipe.delete(e.pointerId)
+  if (s && !s.done && controls.runner === 'tap') { const side = e.clientX < innerWidth / 2 ? -1 : 1; flashZone(side); runner.steer(side) }
+})
 $('game').addEventListener('pointercancel', e => swipe.delete(e.pointerId))
 $('game').addEventListener('contextmenu', e => e.preventDefault())
 addEventListener('pointerdown', () => audioInit(), { once: true }); addEventListener('keydown', () => audioInit(), { once: true })
@@ -167,6 +187,8 @@ on('endBtn', () => { if (game.state === 'paused') endRun(game.mode === 'runner' 
 on('pMenuBtn', toMenu); on('oMenuBtn', toMenu)
 on('howBtn', () => { $('menuCard').classList.add('howing'); $('howBack').focus({ preventScroll: true }) })
 on('howBack', () => { $('menuCard').classList.remove('howing'); $('howBtn').focus({ preventScroll: true }) })
+document.querySelectorAll('.ctrlBtn').forEach(b => b.addEventListener('click', () => { audioInit(); sfx('click'); openControls() }))
+on('ctrlBack', closeControls)
 document.querySelectorAll('.snd').forEach(b => b.addEventListener('click', () => { audioInit(); setSound(b.dataset.k, !AU.on[b.dataset.k]); sfx('click') }))
 addEventListener('resize', resize)
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause() })
@@ -209,10 +231,10 @@ async function boot () {
     await Promise.race([document.fonts ? Promise.all([document.fonts.load('40px Bungee'), document.fonts.load('700 20px "Baloo 2"')]) : 0, new Promise(r => setTimeout(r, 2500))])
   } catch (e) {}
   buildIcons(); buildPowerupUI(); setupTouch()
-  if (isTouch) {
-    $('howRunner').textContent = 'Tap the left or right side to switch lanes, swipe up to hop. Potholes and matatus end your ride. Passengers pay Ksh 50, coins Ksh 10.'
-    $('howRoam').textContent = 'Steer and accelerate with the stick, hold Boost to go faster, tap Hop to jump. Pick up a waving passenger at a stage, then ride to the green beam to drop them off. Faster drops pay a tip.'
-  }
+  setTouchActions({ left: () => runner.steer(-1), right: () => runner.steer(1), hop: () => current.hop() })
+  setupControlsPanel(() => { updateHowTexts(); if (game.mode && game.state !== 'over') showTouchLayout(game.mode, isTouch) })
+  if (!isTouch) $('ctrlNote').textContent = 'The touch options apply when you play on a phone or tablet.'
+  updateHowTexts()
   resize()
   await initPhysics()
   buildSky(); buildRider()

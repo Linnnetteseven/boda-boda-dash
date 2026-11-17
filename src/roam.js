@@ -8,7 +8,7 @@ import { rider, spawnVehicle, syncRider } from './rider.js'
 import { game, earn, activate } from './game.js'
 import { burst, ringPulse, dropTrail, floatText } from './fx3d.js'
 import { sfx } from './audio.js'
-import { $, toast, stick } from './ui.js'
+import { $, toast, stick, pad } from './ui.js'
 import { C, rnd, pick, clamp, damp, specks, ksh, reduceMotion, isTouch } from './util.js'
 
 const PITCH = 60, ROADW = 12, BLOCK = 48, SIDE = 3, EXT = 96, SHIFT = 180
@@ -309,10 +309,10 @@ export const roam = {
   control (dt, keys) {
     const v = rider.v
     if (game.state === 'play') {
-      const up = (keys.up ? 1 : 0) - (keys.down ? 1 : 0) + (stick.active ? stick.y : 0)
-      const st = (keys.right ? 1 : 0) - (keys.left ? 1 : 0) + (stick.active ? stick.x : 0)
+      const up = (keys.up || pad.up ? 1 : 0) - (keys.down || pad.down ? 1 : 0) + (stick.active ? stick.y : 0)
+      const st = (keys.right || pad.right ? 1 : 0) - (keys.left || pad.left ? 1 : 0) + (stick.active ? stick.x : 0)
       v.input.throttle = clamp(up, -1, 1); v.input.steer = clamp(st, -1, 1)
-      v.input.boost = keys.boost || stick.boost || game.pu.nitro > 0
+      v.input.boost = keys.boost || pad.boost || game.pu.nitro > 0
     } else { v.input.throttle = 0; v.input.steer = 0; v.input.boost = false }
     v.topSpeed = 17
     P.driveVehicle(v, dt)

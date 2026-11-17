@@ -100,7 +100,11 @@ export function sfx (name, ...a) { if (!AU.ctx || !AU.on.sfx) return; try { SFX[
 
 export function setSound (k, on) {
   AU.on[k] = on; save.set(k, on)
-  document.querySelectorAll(`.snd[data-k="${k}"]`).forEach(b => { b.setAttribute('aria-pressed', on); b.textContent = (k === 'music' ? 'Music' : 'Sounds') + (on ? ' on' : ' off') })
+  const icon = (k === 'music' ? 'i-music' : 'i-sound') + (on ? '' : '-off'), text = (k === 'music' ? 'Music' : 'Sounds') + (on ? ' on' : ' off')
+  document.querySelectorAll(`.snd[data-k="${k}"]`).forEach(b => {
+    b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', text)
+    b.querySelector('use').setAttribute('href', '#' + icon); b.querySelector('span').textContent = text
+  })
   if (AU.ctx) (k === 'music' ? AU.musicBus : AU.sfxBus).gain.setTargetAtTime(on ? (k === 'music' ? .5 : .85) : 0, AU.ctx.currentTime, .05)
 }
 

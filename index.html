@@ -12,13 +12,42 @@
 <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
+<!-- Icon set: chunky ink outlines with matatu-paint fills. Use with <svg class="ic"><use href="#i-name"/></svg> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="5" y="4" width="5" height="16" rx="1.6" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/><rect x="14" y="4" width="5" height="16" rx="1.6" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 17V5l11-2v12" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="3" fill="var(--magenta)" stroke="var(--ink)" stroke-width="2"/><circle cx="17.5" cy="15.5" r="3" fill="var(--cyan)" stroke="var(--ink)" stroke-width="2"/><path d="M9 8.5l11-2" stroke="var(--ink)" stroke-width="2.2"/></symbol>
+    <symbol id="i-music-off" viewBox="0 0 24 24"><path d="M9 17V5l11-2v12" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" opacity=".45"/><circle cx="6.5" cy="17.5" r="3" fill="#C9C2D6" stroke="var(--ink)" stroke-width="2"/><circle cx="17.5" cy="15.5" r="3" fill="#C9C2D6" stroke="var(--ink)" stroke-width="2"/><path d="M3 3l18 18" stroke="var(--red)" stroke-width="3" stroke-linecap="round"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M3.5 9.5h3.5l5-4.5v14l-5-4.5H3.5z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-sound-off" viewBox="0 0 24 24"><path d="M3.5 9.5h3.5l5-4.5v14l-5-4.5H3.5z" fill="#C9C2D6" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><path d="M15.5 9l6 6M21.5 9l-6 6" stroke="var(--red)" stroke-width="2.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.6-5.7" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M20.5 3.5v5h-5z" fill="var(--magenta)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 11.5L12 4l8.5 7.5" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10.5V20h12v-9.5" fill="var(--cyan)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><rect x="10" y="14" width="4" height="6" fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.8"/></symbol>
+    <symbol id="i-controls" viewBox="0 0 24 24"><path d="M7 7h10a5 5 0 0 1 4.9 6l-.8 4a2.5 2.5 0 0 1-4.3 1.2L14.5 16h-5l-2.3 2.2A2.5 2.5 0 0 1 2.9 17l-.8-4A5 5 0 0 1 7 7z" fill="var(--green)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><path d="M7.5 10v4M5.5 12h4" stroke="var(--paper)" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="10.8" r="1.3" fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.2"/><circle cx="18.2" cy="13.2" r="1.3" fill="var(--magenta)" stroke="var(--ink)" stroke-width="1.2"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/><path d="M9.3 9.3a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2 1-1.2 1.8v.6" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="17.3" r="1.4" fill="var(--ink)"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V3.5" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/><path d="M5 4h14l-3 4.5 3 4.5H5z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 4v4.5H12V4zM12 8.5V13h3.5V8.5zM5 8.5V13h3.5V8.5z" fill="var(--ink)"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5l-7 7 7 7" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15.5 3.5L5 12l10.5 8.5z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M8.5 3.5L19 12 8.5 20.5z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M3.5 15.5L12 5l8.5 10.5z" fill="var(--lime)" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M3.5 8.5L12 19l8.5-10.5z" fill="var(--red)" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-hop" viewBox="0 0 24 24"><path d="M12 3l6 6.5h-3.8V15H9.8V9.5H6z" fill="var(--lime)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><path d="M4 19c2.7-1.6 5.3-1.6 8 0s5.3 1.6 8 0" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-boost" viewBox="0 0 24 24"><path d="M13.5 2.5L5 13.5h6l-1.5 8 8.5-11h-6z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-swipe" viewBox="0 0 24 24"><path d="M10 21l-3.6-5.2a1.6 1.6 0 0 1 2.6-1.8l1 1.2V7.5a1.5 1.5 0 0 1 3 0V12l4.4.9a2 2 0 0 1 1.6 2.3L18.3 21z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"/><path d="M3 5h5M3 5l2-2M3 5l2 2M21 5h-5M21 5l-2-2M21 5l-2 2" fill="none" stroke="var(--magenta)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-tap" viewBox="0 0 24 24"><rect x="2" y="3" width="8.5" height="18" rx="2" fill="var(--cyan)" stroke="var(--ink)" stroke-width="2"/><rect x="13.5" y="3" width="8.5" height="18" rx="2" fill="var(--magenta)" stroke="var(--ink)" stroke-width="2"/><path d="M8 12l-3-2.5v5zM16 12l3-2.5v5z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+    <symbol id="i-buttons" viewBox="0 0 24 24"><rect x="1.5" y="8" width="9" height="9" rx="2.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/><rect x="13.5" y="8" width="9" height="9" rx="2.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/><path d="M7.8 10l-3.3 2.5L7.8 15zM16.2 10l3.3 2.5L16.2 15z" fill="var(--ink)"/></symbol>
+    <symbol id="i-joystick" viewBox="0 0 24 24"><ellipse cx="12" cy="18" rx="9" ry="3.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/><path d="M12 17.5V9" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="7" r="4" fill="var(--magenta)" stroke="var(--ink)" stroke-width="2"/></symbol>
+    <symbol id="i-keys" viewBox="0 0 24 24"><rect x="8.5" y="3" width="7" height="7" rx="1.8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/><rect x="1.5" y="12" width="7" height="7" rx="1.8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/><rect x="8.5" y="12" width="7" height="7" rx="1.8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/><rect x="15.5" y="12" width="7" height="7" rx="1.8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/></symbol>
+  </defs>
+</svg>
+
 <canvas id="game" aria-label="Boda Boda Dash game"></canvas>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div class="vig" id="vig"></div>
 <div class="loading" id="loading"><span>Starting the engine</span></div>
 
 <div class="hud off" id="hud">
-  <button class="pause" id="pauseBtn" aria-label="Pause"><span><i></i><i></i></span></button>
+  <button class="pause" id="pauseBtn" aria-label="Pause"><svg class="ic"><use href="#i-pause"/></svg></button>
   <div class="stack">
     <div class="cash" id="cash"><small>Ksh</small><span id="money">0</span></div>
     <div class="pills">
@@ -31,11 +60,31 @@
 <div class="chips" id="chips"></div>
 <div class="toast" id="toast"></div>
 
+<!-- Touch layouts. main.js shows the one that matches the mode and the player's choice. -->
+<div class="tzones" id="tzones" hidden>
+  <div class="tzone l"><svg class="ic"><use href="#i-left"/></svg></div>
+  <div class="tzone r"><svg class="ic"><use href="#i-right"/></svg></div>
+</div>
+<div class="pad runpad" id="runPad" hidden>
+  <button class="pbtn" data-act="left" aria-label="Move left"><svg class="ic"><use href="#i-left"/></svg></button>
+  <button class="pbtn hop" data-act="hop" aria-label="Hop"><svg class="ic"><use href="#i-hop"/></svg></button>
+  <button class="pbtn" data-act="right" aria-label="Move right"><svg class="ic"><use href="#i-right"/></svg></button>
+</div>
+<div class="swipehint" id="swipeHint" hidden><svg class="ic"><use href="#i-swipe"/></svg><span>Swipe left, right or up</span></div>
+
 <div class="touch" id="touch" hidden>
   <div class="stick" id="stick"><div class="knob" id="knob"></div></div>
+  <div class="steerpad" id="steerPad" hidden>
+    <button class="pbtn" data-hold="left" aria-label="Steer left"><svg class="ic"><use href="#i-left"/></svg></button>
+    <button class="pbtn" data-hold="right" aria-label="Steer right"><svg class="ic"><use href="#i-right"/></svg></button>
+  </div>
   <div class="tbtns">
-    <button class="tbtn" id="hopBtn" aria-label="Hop">Hop</button>
-    <button class="tbtn boost" id="boostBtn" aria-label="Boost">Boost</button>
+    <button class="tbtn small" id="hopBtn" data-hold="hop" aria-label="Hop"><svg class="ic"><use href="#i-hop"/></svg></button>
+    <button class="tbtn small boost" id="boostBtn" data-hold="boost" aria-label="Boost"><svg class="ic"><use href="#i-boost"/></svg></button>
+    <div class="pedals" id="pedals" hidden>
+      <button class="pbtn" data-hold="down" aria-label="Brake"><svg class="ic"><use href="#i-down"/></svg></button>
+      <button class="pbtn gas" data-hold="up" aria-label="Accelerate"><svg class="ic"><use href="#i-up"/></svg></button>
+    </div>
   </div>
 </div>
 
@@ -48,10 +97,11 @@
         <button class="btn alt" id="roamBtn" disabled>Free ride</button>
       </div>
       <p class="bestline" id="menuBest">No rides yet.</p>
-      <div class="row">
-        <button class="cbtn" id="howBtn">How to play</button>
-        <button class="cbtn snd" data-k="music" aria-pressed="true">Music</button>
-        <button class="cbtn snd" data-k="sfx" aria-pressed="true">Sounds</button>
+      <div class="row icons">
+        <button class="ibtn" id="howBtn"><svg class="ic"><use href="#i-help"/></svg><span>How to play</span></button>
+        <button class="ibtn ctrlBtn"><svg class="ic"><use href="#i-controls"/></svg><span>Controls</span></button>
+        <button class="ibtn snd" data-k="music" aria-pressed="true"><svg class="ic"><use href="#i-music"/></svg><span>Music</span></button>
+        <button class="ibtn snd" data-k="sfx" aria-pressed="true"><svg class="ic"><use href="#i-sound"/></svg><span>Sounds</span></button>
       </div>
     </div>
     <div class="body how" id="how">
@@ -62,7 +112,36 @@
       <p id="howRoam">Drive with W A S D or the arrows. Shift boosts, Space hops. Pick up a waving passenger at a stage, then ride to the green beam to drop them off. Faster drops pay a tip.</p>
       <ul id="pupList"></ul>
       <div class="tip">In Runner, pick up 3 passengers in a row without missing one and you get a free power-up.</div>
-      <button class="link" id="howBack">Back</button>
+      <button class="ibtn back" id="howBack"><svg class="ic"><use href="#i-back"/></svg><span>Back</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="screen hidden" id="controls">
+  <div class="card wide"><div class="kerb"></div><div class="fringe"></div>
+    <div class="body">
+      <p class="over-title">Controls</p>
+      <p class="reason" id="ctrlNote">Pick how you play on a touch screen.</p>
+      <h3 class="opt-h">Runner</h3>
+      <div class="opts" role="radiogroup" aria-label="Runner touch controls">
+        <button class="opt" role="radio" data-set="runner" data-val="swipe"><svg class="ic"><use href="#i-swipe"/></svg><b>Swipe</b><span>Swipe left or right to change lane, up to hop.</span></button>
+        <button class="opt" role="radio" data-set="runner" data-val="tap"><svg class="ic"><use href="#i-tap"/></svg><b>Tap sides</b><span>Tap the left or right half of the screen. Swipe up to hop.</span></button>
+        <button class="opt" role="radio" data-set="runner" data-val="buttons"><svg class="ic"><use href="#i-buttons"/></svg><b>Arrow buttons</b><span>Big left, right and hop buttons along the bottom.</span></button>
+      </div>
+      <h3 class="opt-h">Free ride</h3>
+      <div class="opts two" role="radiogroup" aria-label="Free ride touch controls">
+        <button class="opt" role="radio" data-set="roam" data-val="stick"><svg class="ic"><use href="#i-joystick"/></svg><b>Joystick</b><span>Drag the stick to steer and ride. Hop and Boost buttons.</span></button>
+        <button class="opt" role="radio" data-set="roam" data-val="buttons"><svg class="ic"><use href="#i-buttons"/></svg><b>Arrow buttons</b><span>Steer with ◀ ▶ on the left, ride and brake with ▲ ▼ on the right.</span></button>
+      </div>
+      <h3 class="opt-h">Keyboard</h3>
+      <dl class="keylist">
+        <dt><kbd>←</kbd><kbd>→</kbd> or <kbd>A</kbd><kbd>D</kbd></dt><dd>Change lane, steer</dd>
+        <dt><kbd>↑</kbd><kbd>↓</kbd> or <kbd>W</kbd><kbd>S</kbd></dt><dd>Hop in Runner, ride and brake in Free ride</dd>
+        <dt><kbd>Space</kbd></dt><dd>Hop</dd>
+        <dt><kbd>Shift</kbd></dt><dd>Boost in Free ride</dd>
+        <dt><kbd>P</kbd> or <kbd>Esc</kbd></dt><dd>Pause</dd>
+      </dl>
+      <button class="ibtn back" id="ctrlBack"><svg class="ic"><use href="#i-back"/></svg><span>Back</span></button>
     </div>
   </div>
 </section>
@@ -72,13 +151,14 @@
     <div class="body">
       <p class="over-title">Paused</p>
       <p class="reason" id="pauseText">Take a breather.</p>
-      <button class="btn" id="resumeBtn">Resume</button>
-      <div class="row">
-        <button class="cbtn" id="restartBtn">Restart</button>
-        <button class="cbtn" id="endBtn">End ride</button>
-        <button class="cbtn" id="pMenuBtn">Main menu</button>
-        <button class="cbtn snd" data-k="music" aria-pressed="true">Music</button>
-        <button class="cbtn snd" data-k="sfx" aria-pressed="true">Sounds</button>
+      <button class="btn withicon" id="resumeBtn"><svg class="ic"><use href="#i-play"/></svg>Resume</button>
+      <div class="row icons">
+        <button class="ibtn" id="restartBtn"><svg class="ic"><use href="#i-restart"/></svg><span>Restart</span></button>
+        <button class="ibtn" id="endBtn"><svg class="ic"><use href="#i-flag"/></svg><span>End ride</span></button>
+        <button class="ibtn" id="pMenuBtn"><svg class="ic"><use href="#i-home"/></svg><span>Main menu</span></button>
+        <button class="ibtn ctrlBtn"><svg class="ic"><use href="#i-controls"/></svg><span>Controls</span></button>
+        <button class="ibtn snd" data-k="music" aria-pressed="true"><svg class="ic"><use href="#i-music"/></svg><span>Music</span></button>
+        <button class="ibtn snd" data-k="sfx" aria-pressed="true"><svg class="ic"><use href="#i-sound"/></svg><span>Sounds</span></button>
       </div>
     </div>
   </div>
@@ -92,8 +172,11 @@
       <div class="record" id="record">New record!</div>
       <div class="score"><small>Ksh</small><span id="final">0</span></div>
       <p class="bestline" id="bestline">Best: Ksh 0</p>
-      <button class="btn" id="againBtn">Ride again</button>
-      <button class="link" id="oMenuBtn">Main menu</button>
+      <button class="btn withicon" id="againBtn"><svg class="ic"><use href="#i-restart"/></svg>Ride again</button>
+      <div class="row icons">
+        <button class="ibtn" id="oMenuBtn"><svg class="ic"><use href="#i-home"/></svg><span>Main menu</span></button>
+        <button class="ibtn ctrlBtn"><svg class="ic"><use href="#i-controls"/></svg><span>Controls</span></button>
+      </div>
     </div>
   </div>
 </section>

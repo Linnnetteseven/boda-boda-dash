@@ -1,12 +1,13 @@
 // DOM overlays: screens, HUD, toasts, floating fare text, confetti and the touch joystick.
-import { C, rnd, pick, clamp, reduceMotion } from './util.js'
+import { C, rnd, pick, clamp, reduceMotion, save } from './util.js'
 import { PUPS, ICON_URL } from './models.js'
 
 export const $ = id => document.getElementById(id)
 
 export function setScreen (id) {
-  for (const s of ['menu', 'paused', 'over']) $(s).classList.toggle('hidden', s !== id)
+  for (const s of ['menu', 'paused', 'over', 'controls']) $(s).classList.toggle('hidden', s !== id)
   $('hud').classList.toggle('off', id !== null && id !== 'paused')
+  document.body.classList.toggle('overlay', id !== null)
 }
 export function toast (text, sub) {
   const el = $('toast'); el.innerHTML = text + (sub ? `<small>${sub}</small>` : '')
@@ -66,8 +67,18 @@ export function renderFx (dt) {
   confetti = confetti.filter(p => p.life > 0 && p.y < innerHeight + 40)
 }
 
-// ------------------------------------------------------------------ touch joystick (Free ride on phones)
-export const stick = { x: 0, y: 0, active: false, hop: false, boost: false }
+// ------------------------------------------------------------------ touch controls
+// stick: the Free ride joystick. pad: held arrow buttons (Free ride button layout).
+export const stick = { x: 0, y: 0, active: false, boost: false }
+export const pad = { left: false, right: false, up: false, down: false, boost: false }
+export const controls = {
+  runner: save.get('ctlRunner', 'swipe'),   // swipe | tap | buttons
+  roam: save.get('ctlRoam', 'stick')        // stick | buttons
+}
+let actions = { left () {}, right () {}, hop () {} }
+export function setTouchActions (a) { actions = a }
+const buzz = () => { try { navigator.vibrate && navigator.vibrate(8) } catch (e) {} }
+
 export function setupTouch () {
   const base = $('stick'), knob = $('knob')
   let id = null, cx = 0, cy = 0
@@ -84,9 +95,50 @@ export function setupTouch () {
   base.addEventListener('pointermove', e => { if (e.pointerId === id) move(e) })
   const end = e => { if (e.pointerId !== id) return; id = null; stick.active = false; stick.x = stick.y = 0; knob.style.transform = '' }
   base.addEventListener('pointerup', end); base.addEventListener('pointercancel', end)
-  for (const [btn, key] of [[$('hopBtn'), 'hop'], [$('boostBtn'), 'boost']]) {
-    btn.addEventListener('pointerdown', e => { stick[key] = true; btn.classList.add('on'); btn.setPointerCapture(e.pointerId); e.preventDefault() })
-    const up = () => { stick[key] = false; btn.classList.remove('on') }
-    btn.addEventListener('pointerup', up); btn.addEventListener('pointercancel', up)
+  // held buttons (steer, ride, brake, boost); Hop fires once per press
+  for (const btn of document.querySelectorAll('[data-hold]')) {
+    const k = btn.dataset.hold
+    btn.addEventListener('pointerdown', e => {
+      btn.classList.add('on'); btn.setPointerCapture(e.pointerId); e.preventDefault(); buzz()
+      if (k === 'hop') actions.hop(); else pad[k] = true
+    })
+    const up = () => { btn.classList.remove('on'); if (k !== 'hop') pad[k] = false }
+    btn.addEventListener('pointerup', up); btn.addEventListener('pointercancel', up); btn.addEventListener('lostpointercapture', up)
   }
+  // Runner arrow buttons fire on press
+  for (const btn of document.querySelectorAll('[data-act]')) {
+    btn.addEventListener('pointerdown', e => { e.preventDefault(); btn.classList.add('on'); buzz(); actions[btn.dataset.act]() })
+    const up = () => btn.classList.remove('on')
+    btn.addEventListener('pointerup', up); btn.addEventListener('pointercancel', up); btn.addEventListener('pointerleave', up)
+  }
+}
+let hintTimer = 0
+// Show the touch layout that matches the mode and the player's choice. mode: 'runner' | 'roam' | null
+export function showTouchLayout (mode, touch) {
+  const run = touch && mode === 'runner', roam = touch && mode === 'roam'
+  $('tzones').hidden = !(run && controls.runner === 'tap')
+  $('runPad').hidden = !(run && controls.runner === 'buttons')
+  $('touch').hidden = !roam
+  $('stick').hidden = !(roam && controls.roam === 'stick')
+  $('steerPad').hidden = !(roam && controls.roam === 'buttons')
+  $('pedals').hidden = !(roam && controls.roam === 'buttons')
+  document.body.classList.toggle('pads', (run && controls.runner === 'buttons') || roam)
+  const hint = $('swipeHint')
+  hint.hidden = !(run && controls.runner === 'swipe'); hint.classList.remove('fade')
+  clearTimeout(hintTimer); if (!hint.hidden) hintTimer = setTimeout(() => hint.classList.add('fade'), 3200)
+  for (const k in pad) pad[k] = false
+}
+export function flashZone (side) {
+  const z = document.querySelector(side < 0 ? '.tzone.l' : '.tzone.r'); if (!z) return
+  z.classList.add('flash'); setTimeout(() => z.classList.remove('flash'), 140)
+}
+// Controls panel: radio cards for each mode
+export function setupControlsPanel (onChange) {
+  const sync = () => document.querySelectorAll('.opt').forEach(o => o.setAttribute('aria-checked', String(controls[o.dataset.set] === o.dataset.val)))
+  document.querySelectorAll('.opt').forEach(o => o.addEventListener('click', () => {
+    controls[o.dataset.set] = o.dataset.val
+    save.set(o.dataset.set === 'runner' ? 'ctlRunner' : 'ctlRoam', o.dataset.val)
+    sync(); onChange && onChange()
+  }))
+  sync()
 }
